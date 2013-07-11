@@ -1,0 +1,9 @@
+{
+    "maintainer":"OmniTI",
+    "maintainer_email":"sa@omniti.com",
+    "license":"Modified BSD",
+    "description":"nad (nodejs monitoring agent)",
+    "long_description":"Install and configure nad (https://github.com/circonus-labs/nad)",
+    "version":"0.0.1",
+    "name":"nad"
+}
