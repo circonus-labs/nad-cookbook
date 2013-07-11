@@ -22,6 +22,30 @@ Installs nad by downloading tarballs from updates.circonus.com .
 
 ## LWRPs
 
+### `nad_script`
+
+####  Actions
+
+    :enable - Link a script into the config directory, enabling it (default)
+    :disable - Delete a link
+
+#### Attributes
+
+   name - Name of the script (if.sh, cpu.elf, etc)
+   subdir - Subdirectory within nad config directory where the actual script lives; required for :enable
+
+#### Examples
+
+   # Enable postgres replication script
+   nad_script pg_replication.sh do
+     subdir 'postgres'
+   end
+
+   # Disable vm script
+   nad_script vm.sh do
+     action :disable
+   end
+
 ## Attributes
 
 Defaults are shown below.
