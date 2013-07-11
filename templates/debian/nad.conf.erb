@@ -1,0 +1,18 @@
+# Managed by Chef - local changes will be lost!
+# nad cookbook
+
+<%
+   http_port_opts = ''
+   unless node[:nad][:ssl_port] then
+     http_port_opts += '-p ' + (node[:nad][:ip] ? node[:nad][:ip] + ':' : '')
+     http_port_opts += node[:nad][:port].to_s
+   end
+
+   ssl_port_opts = ''
+   if node[:nad][:ssl_port] then
+     ssl_port_opts += '-s ' + (node[:nad][:ssl_ip] ? node[:nad][:ssl_ip] + ':' : '')
+     ssl_port_opts += node[:nad][:ssl_port].to_s
+   end   
+%>
+
+NAD_OPTS="-c <%= node[:nad][:config_dir] %> <%= http_port_opts %> <%= ssl_port_opts %>"

@@ -18,7 +18,7 @@ url = node[:nad][:download_url] + '/' + file_name
 
 remote_file local_path do
   source url
-  mode 00644
+  mode '0644'
   retries 5
   retry_delay 5
   not_if { File.exist?('/opt/circonus/sbin/nad') }
