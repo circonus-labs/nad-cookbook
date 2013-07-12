@@ -8,17 +8,21 @@ More info on nad: https://github.com/circonus-labs/nad
 
 centos, ubuntu
 
-Other un*xes likely; windows unlikely
+Other un*xes likely; windows unlikely.
 
 ## Recipes
 
 ### `nad` (`nad::default`)
 
-Runs the install recipe.
+Runs the install and configure recipes.
 
 ### `nad::install`
 
 Installs nad by downloading tarballs from updates.circonus.com .
+
+### `nad::configure`
+
+nad doesn't have much configuration; this just sets the port, SSL options, and scripts directory.
 
 ## LWRPs
 

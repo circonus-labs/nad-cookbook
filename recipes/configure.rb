@@ -4,6 +4,8 @@ details = {}
 case node[:platform]
 when 'ubuntu', 'debian'
   details[:conf_file] = '/etc/default/nad'
+when 'centos', 'rhel', 'scientific'
+  details[:conf_file] = '/etc/sysconfig/nad'
 end
 
 template details[:conf_file] do 

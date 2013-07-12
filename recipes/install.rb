@@ -1,16 +1,35 @@
-# Installs nad using tarball method
+# Installs nad using omnibus tarball method
 
 unless node[:nad][:enabled] then return end
 
 file_name = node[:nad][:download_file]
 unless file_name then
+
+  # e.g. :
+  # nad-omnibus-20130711T191911Z-rhel5-i386.tar.gz
+
+  arch = node[:kernel][:machine] # From ohai
+  os = nil
+
   case node[:platform]
-  when 'ubuntu'
-    # TODO make this arch and release safe
-    file_name = 'ubuntu-12.04.1-64-nad.tar.gz'
+  when 'ubuntu'    
+    os = 'ubuntu-'
+    # Want '12.04' as string
+    os += node[:platform_version]    
+  when 'centos', 'rhel', 'scientific'
+    os = 'rhel'  # no hyphen, sigh
+    # Want 5 or 6 as string, no minor version
+    os += node[:platform_version].to_i.to_s    
   else
-    #raise "TODO"
+    raise "TODO - port nad install to #{node[:platform]}"
   end
+
+  file_name = 'nad-omnibus-' 
+  file_name += node[:nad][:release] + '-'
+  file_name += os + '-'
+  file_name += arch
+  file_name += '.tar.gz'
+
 end
 
 local_path = File.join(node[:nad][:tmp_path], file_name)
