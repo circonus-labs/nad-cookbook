@@ -1,4 +1,9 @@
 
+2013-07-12 v0.0.2 clinton at omniti dot com
+  * centos support
+  * new file naming scheme for installation tarballs
+  * dynamically determine latest release available if not specified
+
 2013-07-11 v0.0.1 clinton at omniti dot com
   * initial work
   * nad_script LWRP
