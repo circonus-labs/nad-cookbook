@@ -2,15 +2,21 @@
 
 unless node[:nad][:enabled] then return end
 
+return if File.exists?('/opt/circonus/sbin/nad')
+
+require 'open-uri'
+
 file_name = node[:nad][:download_file]
 unless file_name then
 
   # e.g. :
   # nad-omnibus-20130711T191911Z-rhel5-i386.tar.gz
 
+  prefix = "nad-omnibus"
   arch = node[:kernel][:machine] # From ohai
-  os = nil
+  suffix = ".tar.gz"
 
+  os = nil
   case node[:platform]
   when 'ubuntu'    
     os = 'ubuntu-'
@@ -24,11 +30,27 @@ unless file_name then
     raise "TODO - port nad install to #{node[:platform]}"
   end
 
-  file_name = 'nad-omnibus-' 
-  file_name += node[:nad][:release] + '-'
+  release = node[:nad][:release]
+  unless release then
+    html = open(node[:nad][:download_url]).read
+
+    # The right thing to do
+    # doc = Nokogiri::HTML(html)
+    # candidates = doc.xpath("//a[starts-with(@href, '#{prefix}') and ends-with(@href, '#{os}-#{arch}#{suffix}')]/@href")
+
+    # The portable thing to do    
+    candidates = html.scan(/href="#{prefix}-(.+)-#{os}-#{arch}#{suffix}"/).map { |c| c[0] }
+    if candidates.empty? then 
+      raise "Could not find a release version for #{os}-#{arch} at #{node[:nad][:download_url]}.  Consider setting node[:nad][:download_file] to explicitly set it."
+    end
+    release = candidates.sort[-1]                          
+  end
+
+  file_name  = prefix + '-' 
+  file_name += release + '-'
   file_name += os + '-'
   file_name += arch
-  file_name += '.tar.gz'
+  file_name += suffix
 
 end
 
@@ -40,7 +62,6 @@ remote_file local_path do
   mode '0644'
   retries 5
   retry_delay 5
-  not_if { File.exist?('/opt/circonus/sbin/nad') }
 end
 
 bash "unpack nad tarball" do

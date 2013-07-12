@@ -72,8 +72,11 @@ Defaults are shown below.
         # URL without filename
         :download_url => 'http://updates.circonus.com/node-agent',
 
-        # File to download.  Varies by platform; ubuntu shown.
-        :download_file => "ubuntu-12.04.1-64-nad.tar.gz"
+        # File to download.  nad::install will find an appropriate file if possible.
+        :download_file => "nad-omnibus-20130712T154029Z-rhel5-x86_64.tar.gz",
+
+        # You can also just override the release.  nad::install will find an appropriate release if possible.
+        :release => "20130712T154029Z"
 
         #-----
         # Daemon Config
