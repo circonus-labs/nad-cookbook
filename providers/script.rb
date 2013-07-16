@@ -22,6 +22,5 @@ action :disable do
 
   link link_path do
     action :delete
-    to real_path
   end    
 end

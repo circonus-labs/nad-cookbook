@@ -1,3 +1,6 @@
+2013-07-15 v0.0.4 clinton at omniti dot com
+  * fix spurious variable in definition of :disable action of nad_script LWRP
+
 2013-07-15 v0.0.3 clinton at omniti dot com
   * fix bad OS version format in metadata
 
