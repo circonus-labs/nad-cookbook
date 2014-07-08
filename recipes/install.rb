@@ -10,7 +10,8 @@ file_name = node[:nad][:download_file]
 unless file_name then
 
   # e.g. :
-  # nad-omnibus-20130711T191911Z-rhel5-i386.tar.gz
+  # nad-omnibus-20140630T182203Z-1.ubuntu.14.04_amd64.deb or
+  # nad-omnibus-20140630T182203Z-1.el6.x86_64.rpm
 
   prefix = "nad-omnibus"
   arch = node[:kernel][:machine] # From ohai
@@ -19,15 +20,19 @@ unless file_name then
   os = nil
   case node[:platform]
   when 'ubuntu'    
-    os = 'ubuntu-'
+    platform = 'ubuntu.'
     # Want '12.04' as string
-    os += node[:platform_version]    
+    platform += node[:platform_version] + '_'
+    platform += arch
+    suffix = ".deb"
   when 'centos', 'rhel', 'scientific'
-    os = 'rhel'  # no hyphen, sigh
+    platform = 'el'
     # Want 5 or 6 as string, no minor version
-    os += node[:platform_version].to_i.to_s    
+    platform += node[:platform_version].to_i.to_s + '.'
+    platform += arch
+    suffix = ".rpm"
   else
-    raise "TODO - port nad install to #{node[:platform]}"
+    raise "No pre-packaged nad for #{platform}"
   end
 
   release = node[:nad][:release]
@@ -36,20 +41,19 @@ unless file_name then
 
     # The right thing to do
     # doc = Nokogiri::HTML(html)
-    # candidates = doc.xpath("//a[starts-with(@href, '#{prefix}') and ends-with(@href, '#{os}-#{arch}#{suffix}')]/@href")
+    # candidates = doc.xpath("//a[starts-with(@href, '#{prefix}') and ends-with(@href, '#{platform}#{suffix}')]/@href")
 
     # The portable thing to do    
-    candidates = html.scan(/href="#{prefix}-(.+)-#{os}-#{arch}#{suffix}"/).map { |c| c[0] }
+    candidates = html.scan(/href="#{prefix}-(.+)\.#{platform}#{suffix}"/).map { |c| c[0] }
     if candidates.empty? then 
-      raise "Could not find a release version for #{os}-#{arch} at #{node[:nad][:download_url]}.  Consider setting node[:nad][:download_file] to explicitly set it."
+      raise "Could not find a release version for #{platform} at #{node[:nad][:download_url]}.  Consider setting node[:nad][:download_file] to explicitly set it."
     end
     release = candidates.sort[-1]                          
   end
 
   file_name  = prefix + '-' 
-  file_name += release + '-'
-  file_name += os + '-'
-  file_name += arch
+  file_name += release + '.'
+  file_name += platform
   file_name += suffix
 
 end
@@ -64,8 +68,15 @@ remote_file local_path do
   retry_delay 5
 end
 
-bash "unpack nad tarball" do
-  code "tar xzf #{local_path} -C / && rm #{local_path}"
+case node[:platform]
+  when 'ubuntu'
+    install_command = "dpkg -i #{local_path} && rm #{local_path}"
+  when 'centos', 'rhel', 'scientific'
+    install_command = "yum -y --nogpgcheck localinstall #{local_path} && rm #{local_path}"
+end
+
+bash "install nad" do
+  code install_command
   only_if "test -f #{local_path}"
 end
 
