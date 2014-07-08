@@ -70,13 +70,13 @@ Defaults are shown below.
         :tmp_path => '/tmp',
 
         # URL without filename
-        :download_url => 'http://updates.circonus.com/node-agent',
+        :download_url => 'http://updates.circonus.net/node-agent/packages',
 
         # File to download.  nad::install will find an appropriate file if possible.
-        :download_file => "nad-omnibus-20130712T154029Z-rhel5-x86_64.tar.gz",
+        :download_file => "nad-omnibus-20140630T182203Z-1.el6.x86_64.rpm",
 
         # You can also just override the release.  nad::install will find an appropriate release if possible.
-        :release => "20130712T154029Z"
+        :release => "20140630T182203Z"
 
         #-----
         # Daemon Config
