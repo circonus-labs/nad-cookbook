@@ -10,3 +10,4 @@ supports         "centos", ">= 5.0"
 supports         "rhel",   ">= 5.0"    
 
 depends         "smf"
+
