@@ -23,6 +23,10 @@ unless file_name then
     platform = 'ubuntu.'
     # Want '12.04' as string
     platform += node[:platform_version] + '_'
+    # because Debian
+    if arch == 'x86_64'
+      arch = 'amd64'
+    end
     platform += arch
     suffix = ".deb"
   when 'centos', 'rhel', 'scientific'
