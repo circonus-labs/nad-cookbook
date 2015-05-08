@@ -4,6 +4,6 @@
     "license":"Modified BSD",
     "description":"nad (nodejs monitoring agent)",
     "long_description":"Install and configure nad (https://github.com/circonus-labs/nad)",
-    "version":"0.0.5",
-    "name":"nad"
+    "version":"0.0.6",
+    "name":"nad-cookbook"
 }
